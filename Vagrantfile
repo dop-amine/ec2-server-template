@@ -1,0 +1,31 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.vm.define "app" do |local|
+    local.vm.box = "geerlingguy/ubuntu1804"
+    local.ssh.insert_key = false
+    local.vm.hostname = 'local'
+    local.vm.network :private_network, ip: "192.168.0.43"
+    local.vm.synced_folder "~/apps", "/var/www"
+    local.vm.synced_folder "~/.ssh", "/home/vagrant/.ssh"
+
+    local.vm.provider :virtualbox do |v|
+      v.name = "app"
+      v.memory = 2048
+      v.cpus = 2
+      v.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
+      v.customize ["modifyvm", :id, "--ioapic", "on"]
+    end
+
+    config.vm.provision "ansible" do |ansible|
+      ansible.playbook = "local.yml"
+      ansible.become = true
+      #ansible.raw_arguments  = "--ask-vault-pass"
+      #ansible.raw_arguments  = "--vault-password-file=~/location/of/ansible_vault_pass.yml"
+      #ansible.tags = "update"
+      #ansible.skip_tags =
+    end
+  end
+end
