@@ -2,23 +2,28 @@
 
 Ansible playbook template to deploy Ubuntu 18.04 server on AWS EC2 and locally with Vagrant
 
-## Setup
+## Setup Local
 
-1. Enter relevant variables in the `vars/vars.yml` file
-1. Add your ssh public key(s) to `vars/ssh_keys/authorized_keys.yml`
-1. Edit the config files in `vars/configs/`
-1. Add any tasks you need to `tasks/`, `main.yml` and `local.yml`
-1. Add any roles you need
+1. Enter relevant variables in the `local/vars/vars.yml` file
+1. Create `~/.ssh/authorized_keys` on your local machine and with your public key. This is used as a shared folder with vagrant in order to connect: `cp ~/.ssh/id_rsa.pub ~/.ssh/authorized_keys` (`ssh-keygen` to setup)
+1. Edit the config files in `local/vars/configs/`
+1. Add any tasks you need to `local/tasks/` and `local/main.yml`
+1. Add any roles you need to `local/roles/` and `local/main.yml`
+1. Create the VM: `vagrant up`
+1. Connect to the VM: `vagrant ssh`
 
-When your site is created and has an associated domain name/DNS resource, add it below `[web]` in the `hosts` file.
+## Web Setup
 
-## Web Usage
+1. Enter relevant variables in the `web/vars/vars.yml` file
+1. Add your ssh public key(s) to `web/vars/ssh_keys/authorized_keys.yml`
+1. Edit the config files in `web/vars/configs/`
+1. Add any tasks you need to `web/tasks/` and `web/main.yml`
+1. Add any roles you need to `web/roles/` and `web/main.yml`
 
-`lab/web/main.yml` is used to build and manage servers and dependencies.
+After the site is provisioned:
 
-```
-ansible-playbook --ask-vault-pass -i hosts --key-file "~/devops/local/key_pairs/<keypair>.pem" main.yml
-```
+* Create certs with certbot (`--certonly`)
+* Create an associated domain name, DNS record, add it below `[web]` in the `hosts` file.
 
 ## Local Usage
 
@@ -36,7 +41,7 @@ ansible-playbook --ask-vault-pass -i hosts --key-file "~/devops/local/key_pairs/
 * **View login message:** `motd`
 * **File browser:** `ranger`
 * **Reload dotfiles:** `sauce`
-* **Netdata** real-time performance monitor in the browser at `my.winmo.vm:19999`
+* **Netdata** real-time performance monitor in the browser at `192.168.1.43:19999`
   * _follow troubleshooting steps [here](http://wiki.tldev2.com/books/devops/page/monitoring#bkmrk-troubleshooting) if Netdata is not loading_
 
 **Resource Allocation:**
@@ -45,6 +50,14 @@ You can easily change resource allocation for the VM in the `lab/local/Vagrantfi
 
 * `v.memory = <memory>` = Memory / RAM allocated to the VM
 * `v.cpus = <cpu_cores>` = CPU Cores allocated to the VM
+
+## Web Usage
+
+`lab/web/main.yml` is used to build and manage servers and dependencies.
+
+```
+ansible-playbook --ask-vault-pass -i hosts --key-file "~/devops/local/key_pairs/<keypair>.pem" main.yml
+```
 
 ## Dependencies
 

@@ -7,7 +7,7 @@
 
 - name: Create app directory
   file:
-    dest: /var/www/{{ app_name }}
+    dest: /var/www/{{ app }}
     state: directory
     owner: "{{ username }}"
     group: "{{ username }}"
@@ -15,7 +15,7 @@
 
 - name: Create app apache config
   blockinfile:
-    dest: /etc/apache2/sites-available/{{ app_name }}-{{ app_env }}.conf
+    dest: /etc/apache2/sites-available/{{ app }}.conf
     create: yes
     owner: "{{ username | lower }}"
     group: "{{ username | lower }}"
@@ -24,4 +24,4 @@
       {{ apache_config }}
 
 - name: Enable app site
-  shell: a2ensite {{ app_name }}-{{ app_env }}.conf
+  shell: a2ensite {{ app }}.conf

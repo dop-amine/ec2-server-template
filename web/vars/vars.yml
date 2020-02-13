@@ -16,4 +16,4 @@ awscli_profile: default
 
 # OS
 username: deploy
-app_name:
+app:

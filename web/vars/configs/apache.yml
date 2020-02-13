@@ -8,12 +8,12 @@ apache_config: |
   </VirtualHost>
   <VirtualHost *:443>
     ServerName {{ host_name }}
-    DocumentRoot /var/www/{{ app_name }}/public
+    DocumentRoot /var/www/{{ app }}/public
 
     SSLCertificateFile          /etc/letsencrypt/live/{{ host_name }}/fullchain.pem
     SSLCertificateKeyFile       /etc/letsencrypt/live/{{ host_name }}/privkey.pem
 
-    <Directory /var/www/{{ app_name }}/public>
+    <Directory /var/www/{{ app }}/public>
       AllowOverride All
       php_flag display_errors Off
     </Directory>

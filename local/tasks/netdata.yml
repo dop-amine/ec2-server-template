@@ -14,14 +14,14 @@
   lineinfile:
     path: /etc/netdata/netdata.conf
     insertafter: '#\s+hostname\s+\=\s+'
-    line: '        hostname = {{ app_env | upper }}'
+    line: '        hostname = {{ app | upper }}'
     state: present
 
 - name: Configure netdata registry hostname
   lineinfile:
     path: /etc/netdata/netdata.conf
     insertafter: '#\s+registry\s+hostname\s+\=\s+'
-    line: '        registry hostname = {{ app_env | upper }}'
+    line: '        registry hostname = {{ app | upper }}'
     state: present
 
 - name: Configure netdata global hostname
@@ -29,7 +29,7 @@
     path: /etc/netdata/netdata.conf
     insertbefore: '#\s+process\s+scheduling\s+policy\s+\=\s+keep\s+'
     firstmatch: yes
-    line: '        hostname = {{ app_env | upper }}'
+    line: '        hostname = {{ app | upper }}'
     state: present
 
 - name: Restart netdata
